@@ -4,15 +4,18 @@ GIT_TAG     := $(shell git tag --list | head -n 1)
 GIT_VERSION := $(shell echo $(GIT_TAG) | sed -e 's/v//')
 ITERATION   := $(shell git rev-list $(GIT_TAG)..HEAD --count)
 
-all:
-	(cd cf && make)
+.PHONY: build clean install deb
+
+build:
+	(cd cloud-files-sync && make)
 
 clean:
 	rm -rf .build
-	(cd cf && make clean)
+	rm -rf *.deb
+	(cd cloud-files-sync && make clean)
 
-install:
-	(cd cf && make DESTDIR=${DESTDIR} install)
+install: build
+	(cd cloud-files-sync && make DESTDIR=${DESTDIR} install)
 
 deb:
 	make install

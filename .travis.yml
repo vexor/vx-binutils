@@ -1,0 +1,11 @@
+language: go
+
+go:
+  - 1.2.2
+
+before_install:
+  - go get github.com/mattn/gom
+  - gem install fpm
+
+script:
+  - make deb
