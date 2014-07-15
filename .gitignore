@@ -1,1 +1,3 @@
 /cf/_vendor/
+/.build
+/*.deb
