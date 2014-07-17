@@ -12,6 +12,8 @@ build:
 clean:
 	rm -rf .build
 	rm -rf *.deb
+	rm -rf *.rpm
+	rm -rf *.tar.gz
 	(cd cloud-files && make clean)
 
 install: build
@@ -26,3 +28,7 @@ rpm:
 	make install
 	fpm -s dir -t rpm -C $(DESTDIR) --name vx-binutils --version $(GIT_VERSION) \
 		--iteration $(ITERATION) ./
+
+tar_osx:
+	make install
+	tar -C $(DESTDIR)/usr/local/bin -vzcf vx-binutils_$(GIT_VERSION)-$(ITERATION)_osx_amd64.tar.gz .

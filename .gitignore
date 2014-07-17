@@ -2,3 +2,4 @@
 /.build
 /*.deb
 /*.rpm
+/*.tar.gz
