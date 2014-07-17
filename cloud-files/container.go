@@ -8,6 +8,7 @@ import (
   "sync"
   "fmt"
   "io"
+  "time"
 )
 
 type Container struct {
@@ -45,13 +46,13 @@ func (c *Container) Valid() error {
 }
 
 func (c *Container) FindObject(name string) (*ContainerObject, error) {
-  a, h, err := c.conn.Object(c.Name, name)
+  a, _, err := c.conn.Object(c.Name, name)
   if err != nil {
     return nil, err
   }
 
   obj := &ContainerObject{
-    Md5:     h["Origin"],
+    Md5:     a.Hash,
     Size:    a.Bytes,
     Name:    name,
   }
@@ -61,9 +62,7 @@ func (c *Container) FindObject(name string) (*ContainerObject, error) {
 
 func (c *Container) CreateObject(file LocalFile, prefix string) (*ContainerObject, error) {
   name := prefix + file.Name
-  h    := swift.Headers{}
-  h["Origin"] = file.Md5 // CloudFiles does not support custom headers, using allowed
-  origin, err := c.conn.ObjectCreate(c.Name, name, true, file.Md5, "", h)
+  origin, err := c.conn.ObjectCreate(c.Name, name, true, file.Md5, "", swift.Headers{})
   if err != nil {
     return nil, err
   }
@@ -200,10 +199,11 @@ func FindContainers(containerSpec string) ([]*Container, error) {
     }
 
     conn := &swift.Connection{
-      UserName: userName,
-      ApiKey:   apiKey,
-      Region:   region,
-      AuthUrl:  authUrl,
+      UserName:       userName,
+      ApiKey:         apiKey,
+      Region:         region,
+      AuthUrl:        authUrl,
+      ConnectTimeout: 30 * time.Second,
     }
 
     container := &Container{

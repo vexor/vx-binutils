@@ -5,6 +5,7 @@ import (
   "time"
   "fmt"
   "sync/atomic"
+  "sync"
 )
 
 type Progress struct {
@@ -12,10 +13,11 @@ type Progress struct {
   startAt    time.Time
   totalBytes int64
   curBytes   int64
+  wg         *sync.WaitGroup
 }
 
 func (p *Progress) String() string {
-  s := fmt.Sprintf("%.2f %% | %s / sec", p.Percent(), FormatBytes(int64(p.Value())))
+  s := fmt.Sprintf("%.2f %% | %s/sec", p.Percent(), FormatBytes(int64(p.Value())))
   return s
 }
 
@@ -43,6 +45,7 @@ func (p *Progress) Add(n int64) {
 func (p *Progress) Begin() {
   p.startAt = time.Now()
 
+  p.wg.Add(1)
   go func() {
     Loop:
       for {
@@ -56,12 +59,18 @@ func (p *Progress) Begin() {
         }
       }
     LogInfoR(p.String())
+    p.wg.Done()
   }()
+}
+
+func (p *Progress) Wait() {
+  p.wg.Wait()
 }
 
 func NewProgress(totalBytes int64) *Progress {
   p := &Progress{
     totalBytes: totalBytes,
+    wg:         new(sync.WaitGroup),
   }
 
   return p

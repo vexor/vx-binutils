@@ -75,6 +75,8 @@ func (g *ActionGet) Download() {
       break
     }
   }
+
+  p.Wait()
 }
 
 func (g *ActionGet) CollectObjects () {
@@ -84,7 +86,7 @@ func (g *ActionGet) CollectObjects () {
   defer close(in)
   defer close(out)
 
-  for i := 0 ; i < 5 ; i++ {
+  for i := 0 ; i < 20 ; i++ {
     go func() {
       for name := range in {
         obj, err := g.container.FindObject(name)
@@ -109,7 +111,7 @@ func (g *ActionGet) CollectObjects () {
     }
 
     g.totalBytes += res.o.Size
-    LogInfoR("Collect %d of %d", g.totalObjects - total, g.totalObjects)
+    LogInfoR("Collect %d of %d objects", g.totalObjects - total, g.totalObjects)
     if total == 0 {
       break
     }
@@ -119,7 +121,7 @@ func (g *ActionGet) CollectObjects () {
 }
 
 func ActionGetHandler(cmd *cobra.Command, args []string) {
-  directoryName := cmd.Flag("directory").Value.String()
+  directoryName := cmd.Flag("source").Value.String()
 
   if len(args) == 0 {
     LogNl()

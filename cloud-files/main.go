@@ -11,8 +11,6 @@ import (
 var (
   directoryName   string
   containerName   string
-  numberOfThreads uint
-  action          string
   destroy         bool
   prefix          string
 )
@@ -41,10 +39,10 @@ func main() {
   }
 
   cmdPut.Flags().BoolVarP(&destroy, "delete", "d", false, "delete extraneous files from container")
-  cmdPut.Flags().StringVarP(&directoryName, "directory", "s", ".", "source directory or file to upload")
+  cmdPut.Flags().StringVarP(&directoryName, "source", "s", ".", "source directory or file to upload")
   cmdPut.Flags().StringVarP(&prefix, "prefix", "p", "", "add prefix to each uploaded object")
 
-  cmdGet.Flags().StringVarP(&directoryName, "directory", "s", ".", "directory name to download")
+  cmdGet.Flags().StringVarP(&directoryName, "source", "s", ".", "directory name to download")
 
   var rootCmd = &cobra.Command{Use: os.Args[0]}
   rootCmd.AddCommand(cmdGet, cmdPut)

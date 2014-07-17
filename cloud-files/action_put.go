@@ -87,6 +87,8 @@ func (put ActionPut) WaitUpload() {
       break
     }
   }
+
+  put.progress.Wait()
 }
 
 func (put ActionPut) RemoveObjectsPool(in chan ActionPutDelReq, out chan error) {
@@ -158,7 +160,7 @@ func (put ActionPut) RemoveObjects() {
 
 func ActionPutHandler(cmd *cobra.Command, args []string) {
 
-  directoryName := cmd.Flag("directory").Value.String()
+  directoryName := cmd.Flag("source").Value.String()
   removeFiles   := cmd.Flag("delete").Value.String()
   prefix        := cmd.Flag("prefix").Value.String()
 
