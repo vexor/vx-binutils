@@ -7,17 +7,22 @@ ITERATION   := $(shell git rev-list $(GIT_TAG)..HEAD --count)
 .PHONY: build clean install deb
 
 build:
-	(cd cloud-files-sync && make)
+	(cd cloud-files && make)
 
 clean:
 	rm -rf .build
 	rm -rf *.deb
-	(cd cloud-files-sync && make clean)
+	(cd cloud-files && make clean)
 
 install: build
-	(cd cloud-files-sync && make DESTDIR=${DESTDIR} install)
+	(cd cloud-files && make DESTDIR=${DESTDIR} install)
 
 deb:
 	make install
 	fpm -s dir -t deb -C $(DESTDIR) --name vx-binutils --version $(GIT_VERSION) \
+		--iteration $(ITERATION) ./
+
+rpm:
+	make install
+	fpm -s dir -t rpm -C $(DESTDIR) --name vx-binutils --version $(GIT_VERSION) \
 		--iteration $(ITERATION) ./
