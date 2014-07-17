@@ -1,3 +1,4 @@
-/cloud-files-sync/_vendor/
+/cloud-files/_vendor/
 /.build
 /*.deb
+/*.rpm

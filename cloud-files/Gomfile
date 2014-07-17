@@ -1,0 +1,3 @@
+gom "github.com/ncw/swift",     :commit => "3b91e95a8fbfb53c4046486904f4fc3ba424ff5c"
+gom "github.com/spf13/cobra",   :commit => "7cebca376187b9d853fbe0feb1f2d7799ae7c785"
+gom "github.com/wsxiaoys/terminal", :commit => "9dcaf1d63119a8ac00eef82270eaef08b6aa2328"
