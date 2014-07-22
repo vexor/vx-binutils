@@ -7,8 +7,8 @@ Can do:
 
 * upload files simultaneously in separate regions
 * verify MD5 when uploading and downloading
-* utilizes 5-20 threads, so faster than [pyrax][pyrax]
-* no dependencies, a single statically built binary
+* utilize 5-20 threads, so faster than [pyrax][pyrax]
+* work without dependencies, using a single statically built binary
 
 
 Cannot do:
