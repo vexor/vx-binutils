@@ -1,31 +1,33 @@
 cloud-files
 ===========
 
-Синхронизация файлов с Rackspace Cloud Files
+Synchronising files with Rackspage Cloud Files
 
-Умеет:
+Can do:
 
-* загружать файлы сразу в несколько регионов
-* проверяет md5 при загрузке и скачивании
-* работает в 5-20 потоков, поэтому значительно быстрее [pyrax][pyrax]
-* нет никаких зависимостей, один статически собранный бинарник
+* upload files simultaneously in separate regions
+* verify MD5 when uploading and downloading
+* utilize 5-20 threads, so faster than [pyrax][pyrax]
+* work without dependencies, using a single statically built binary
 
-Не умеет:
 
-* Работать с отличными от rackspace openstack провайдерами
+Cannot do:
 
-Установка
+* Work with openstack providers, other than rackspace
+
+Setting up
 =========
 
-Сказать со страницы [releases][releases] ``deb`` или ``rpm`` пакет, зависимостей у них никаких
-нет, поэтому проблем с установкой не будет
+Download ``deb`` or ``rpm`` package from the [releases][releases] page. There are no dependencies
+so you shouldn't have any issues with installation.
 
-Для debian based:
+
+For debian based:
 
     wget https://github.com/vexor/vx-binutils/releases/download/v0.0.2/vx-binutils_0.0.2-0_amd64.deb
     sudo dpkg -i vx-binutils_0.0.2-0_amd64.deb
 
-Для rpm based:
+For rpm based:
 
     wget https://github.com/vexor/vx-binutils/releases/download/v0.0.2/vx-binutils-0.0.2-0.x86_64.rpm
     rpm -Uhv vx-binutils-0.0.2-0.x86_64.rpm
@@ -33,34 +35,36 @@ cloud-files
 OSX:
     wget -O- https://github.com/vexor/vx-binutils/releases/download/v0.0.2/vx-binutils_0.0.2-2_osx_amd64.tar.gz | tar -vzxf -
 
-Для работы потребуются 2 перменные окружения ``SDK_USERNAME`` и ``SDK_API_KEY``
+Two environmental variables are required:  ``SDK_USERNAME`` and ``SDK_API_KEY``
 
     export SDK_USERNAME=<rackspace login>
     export SDK_API_KEY=<rackspace api key>
 
-Загрузка файлов
+Uploading files
 ===============
 
-Загружать можно как весь каталог целиком так и отдельные файлы
+It is possible to upload either specific files or entire directories
 
-    # синхронизирует каталог ~/packages с контейнером packages в IAD регионе,
-    # эквивалента команде rsync --delete SOURCE DEST
+    # synchronizes the ~/packages directory with packages container in IAD region,
+    # which is equivalent to running rsync --delete SOURCE DEST
     cloud-sync put -d -s ~/packages iad:packages
 
-    # загрузит отдельный файл archive.tar в контейнер backup в регионе IAD
+    # uploads archive.tar file into backup container in IAD region
     cloud-sync put -s ~/archive.tar iad:backup
 
-Нужный регион для загрузки указывать не обязательно, ``cloud-sync`` проверит все
-регионы и найдет контейнер c указанным именем, это можно использовать для
-загрузки файлов сразу в несколько регионов
+You don't have to specify the required region when uploading, ``cloud-sync`` will check all regions
+and will find the container with given name, so it is possible to upload multiple files into several regions
+at the same time.
 
-    # если контейнер files есть и в IAD и в SYD регионах, то загружать будет сразу
-    # в оба региона
+
+  
+    # if the files container exists in both IAD and SYD regions, it will start uploading to both of them
     cloud-sync put -s ~/files files
 
-При загрузке файлов и каталогов можно указывать prefix, который получат все загруженные файлы
+You can add prefix when uploading, and this prefix will be used for all the uploaded file names.
 
-    # загрузит файл backup.tar в каталог с именем 20131016/ в контейнере
+    
+    # uploads backup.tar file into the 20131016/ directory in the container
     cloud-sync -s ~/backup.tar -p $(date +"%Y%m%d")/ backups
 
 
